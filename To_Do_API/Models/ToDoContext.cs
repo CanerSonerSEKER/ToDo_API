@@ -11,7 +11,7 @@ namespace To_Do_API.Models
         }
 
         
-        public DbSet<TodoItem> ToDoItems { get; set; } = null!;
+        public DbSet<TodoItem> ToDoItem { get; set; } = null!;
 
 
 
