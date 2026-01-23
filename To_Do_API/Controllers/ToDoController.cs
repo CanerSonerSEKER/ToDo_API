@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.Xml;
 using To_Do_API.Models;
+using To_Do_API.Models.ToDoDTO;
 
 namespace To_Do_API.Controllers
 {
+    [Route("api/ToDo")]
     [ApiController]
     public class ToDoController : Controller
     {
@@ -13,26 +17,19 @@ namespace To_Do_API.Controllers
         public ToDoController(ToDoContext context)
         {
             _context = context;
-
-            if (!_context.ToDoItem.Any())
-            {
-                _context.ToDoItem.Add(new TodoItem
-                {
-                    Name = "Eve gel",
-                    IsComplete = true,
-                });
-                _context.SaveChanges();
-            }
         }
 
         // GET All 
         [HttpGet("GetToDoItems")]
-        public async Task<IEnumerable<TodoItem>> GetToDoItems()
+        public async Task<IEnumerable<TodoItemDTO>> GetToDoItems()
         {
+            // Msc Learn
+            //List<TodoItemDTO> items = await _context.TodoItemDTO.ToListAsync();
 
-            List<TodoItem> items = await _context.ToDoItem.ToListAsync();
+            //return items;
 
-            return items;
+            // Model icerisinden aktarilarak elde edilen dtolu cikti
+            return await _context.ToDoItem.Select(x => ItemToDTO(x)).ToListAsync();
         }
 
         //// GET BY ID 
@@ -55,58 +52,76 @@ namespace To_Do_API.Controllers
         //}
 
         // GET BY ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetToDoItemById(long? id)
+        [HttpGet("GetToDoItemById/{id}")]
+        public async Task<ActionResult<TodoItemDTO>> GetToDoItemById(long? id)
         {
-            if (id == null)
+            TodoItem todoItem = await _context.ToDoItem.FindAsync(id);
+
+            if (todoItem == null)
+            {
                 return NotFound();
+            }
 
-            TodoItem item = await _context.ToDoItem.FindAsync(id);
-
-            if (item == null)
-                return BadRequest();
-
-            return item;
+            return ItemToDTO(todoItem);
         }
 
 
         // ADD / POST 
         [HttpPost("CreateAnItem")]
-        public async Task<ActionResult<TodoItem>> CreateAnItem(TodoItem toDoItem)
+        public async Task<ActionResult<TodoItemDTO>> CreateAnItem(TodoItemDTO todoItemDTO)
         {
-            _context.ToDoItem.Add(toDoItem);
+            TodoItem todoItem = new TodoItem()
+            {
+                Name = todoItemDTO.Name,
+                IsComplete = todoItemDTO.IsComplete
+            };
+
+            _context.ToDoItem.Add(todoItem);
             await _context.SaveChangesAsync();
 
-            // Once veri alınıyor sonrasında yeni bir id atanarak girilen item ekleniyor. Anladığım budur.
-            return CreatedAtAction(nameof(GetToDoItems), new { id = toDoItem.Id }, toDoItem);
+            return CreatedAtAction(nameof(GetToDoItems), new { id = todoItem.Id }, ItemToDTO(todoItem));
         }
 
 
         // UPDATE / PUT
-        [HttpPut("{id}")]
-        public async Task<ActionResult<TodoItem>> UpdateAnItem(long? id, [FromBody] TodoItem toDoItem)
+        [HttpPut("UpdateAnItem/{id}")]
+        public async Task<ActionResult<TodoItemDTO>> UpdateAnItem(long? id, TodoItemDTO todoItemDTO)
         {
-            if (toDoItem == null || toDoItem.Id != id)
+            if (todoItemDTO == null || todoItemDTO.Id != id)
                 return BadRequest();
 
-            TodoItem item = await _context.ToDoItem.FirstOrDefaultAsync(i => i.Id == id);
-
-            if (item == null)
+            TodoItem todoItem = await _context.ToDoItem.FindAsync(id);
+            if (todoItem == null)
+            {
                 return NotFound();
+            }
 
-            item.Name = toDoItem.Name;
-            item.IsComplete = toDoItem.IsComplete;
+            todoItem.Name = todoItemDTO.Name;
+            todoItem.IsComplete = todoItemDTO.IsComplete;
 
-            _context.ToDoItem.Update(item);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoItemExist(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw new Exception("Cannot save this changes.");
+                }
 
+            }
             return new NoContentResult();
         }
 
 
-        // DELETE 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItem>> DeleteAnItem(long? id, TodoItem toDoItem)
+        // Delete 
+        [HttpDelete("DeleteAnItem/{id}")]
+        public async Task<ActionResult<TodoItemDTO>> DeleteAnItem(long? id)
         {
             if(id == null)
                 return BadRequest();
@@ -122,5 +137,19 @@ namespace To_Do_API.Controllers
             return new NoContentResult();
         }
 
+
+        private bool TodoItemExist(long? id)
+        {
+        
+            return _context.ToDoItem.Any(i => i.Id == id);
+        }
+
+        private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
+            new TodoItemDTO
+            {
+                Id = todoItem.Id,
+                Name = todoItem.Name,
+                IsComplete = todoItem.IsComplete,
+            };
     }
 }

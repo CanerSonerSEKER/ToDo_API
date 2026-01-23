@@ -5,7 +5,7 @@ GET {{To_Do_API_HostAddress}}/GetToDoItems
 ###
 
 @id=1
-GET {{To_Do_API_HostAddress}}/GetToDoItemsById/{{id}}
+GET {{To_Do_API_HostAddress}}/{id}
 
 ###
 
@@ -19,12 +19,19 @@ Content-Type: application/json
 
 ###
 
-
+@id=3
 PUT {{To_Do_API_HostAddress}}/{id}
 Content-Type: application/json
 
 {
-  //TodoItem
+  "Name" : "walking dog",
+  "isComplete" : true
 }
 
 ###
+
+@id=3
+DELETE {{To_Do_API_HostAddress}}/{id}
+
+###
+

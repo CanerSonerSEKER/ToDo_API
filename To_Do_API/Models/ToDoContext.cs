@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using To_Do_API.Models.ToDoDTO;
 
 namespace To_Do_API.Models
 {
@@ -13,6 +14,7 @@ namespace To_Do_API.Models
         
         public DbSet<TodoItem> ToDoItem { get; set; } = null!;
 
+        public DbSet<TodoItemDTO> TodoItemDTO { get; set; } = null!; 
 
 
     }
