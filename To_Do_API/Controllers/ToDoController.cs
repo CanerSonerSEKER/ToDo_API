@@ -8,8 +8,8 @@ using To_Do_API.Models.ToDoDTO;
 
 namespace To_Do_API.Controllers
 {
-    [Route("api/ToDo")]
     [ApiController]
+    [Route("api/todos")]
     public class ToDoController : Controller
     {
         private readonly ToDoContext _context;
@@ -21,7 +21,7 @@ namespace To_Do_API.Controllers
 
         // GET All 
         [HttpGet("GetToDoItems")]
-        public async Task<IEnumerable<TodoItemDTO>> GetToDoItems()
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetToDoItems()
         {
             // Msc Learn
             //List<TodoItemDTO> items = await _context.TodoItemDTO.ToListAsync();
