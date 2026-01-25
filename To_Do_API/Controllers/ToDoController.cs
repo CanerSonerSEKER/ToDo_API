@@ -32,28 +32,9 @@ namespace To_Do_API.Controllers
             return await _context.ToDoItem.Select(x => ItemToDTO(x)).ToListAsync();
         }
 
-        //// GET BY ID 
-        //[HttpGet("{id}")]
-        //public ActionResult<TodoItem> GetToDoItemsById(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var items = _context.ToDoItem.Find(id);
-
-        //    if (items == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return items;
-        //}
-
         // GET BY ID
         [HttpGet("GetToDoItemById/{id}")]
-        public async Task<ActionResult<TodoItemDTO>> GetToDoItemById(long? id)
+        public async Task<ActionResult<TodoItemDTO>> GetToDoItemById(long id)
         {
             TodoItem todoItem = await _context.ToDoItem.FindAsync(id);
 
@@ -79,7 +60,7 @@ namespace To_Do_API.Controllers
             _context.ToDoItem.Add(todoItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetToDoItems), new { id = todoItem.Id }, ItemToDTO(todoItem));
+            return CreatedAtAction(nameof(GetToDoItemById), new { id = todoItem.Id }, ItemToDTO(todoItem));
         }
 
 
@@ -111,7 +92,7 @@ namespace To_Do_API.Controllers
                 }
                 else
                 {
-                    throw new Exception("Cannot save this changes.");
+                    return StatusCode(500, "Concurrency Error");
                 }
 
             }
