@@ -7,10 +7,10 @@ namespace To_Do_API.Services
 {
     public interface ITodoService
     {
-        Task<IEnumerable<TodoItemDTO>> GetAllAsync();
-        Task<TodoItemDTO> GetByIdAsync(long id);
-        Task<TodoItemDTO> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct);
-        Task<TodoItemDTO> UpdateAsync(long id, TodoItemDTO todoItemDto);
+        Task<ActionResult<IEnumerable<TodoItemDTO>>> GetAllAsync();
+        Task<ActionResult<TodoItemDTO>> GetByIdAsync(long id);
+        Task<ActionResult<TodoItemDTO>> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct);
+        Task<ActionResult<TodoItemDTO>> UpdateAsync(long id, UpdateTodoItemRequest updateTodoRequest, CancellationToken ct);
         Task DeleteAsync(long id);
 
 

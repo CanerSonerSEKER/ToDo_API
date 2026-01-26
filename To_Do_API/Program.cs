@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using To_Do_API.Models;
+using To_Do_API.Services;
 
 namespace To_Do_API
 {
@@ -17,6 +18,7 @@ namespace To_Do_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ToDoContext>(opt => opt.UseInMemoryDatabase("ToDoList"));
+            builder.Services.AddScoped<ITodoService, TodoService>();
 
             var app = builder.Build();
 

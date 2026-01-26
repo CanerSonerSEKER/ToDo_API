@@ -16,17 +16,26 @@ namespace To_Do_API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<TodoItemDTO>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetAllAsync()
         {
             return await _context.ToDoItem.Select(x => MapToDto(x)).ToListAsync(); // Yani önce dto yu getirip sonrasında listeliyoruz
         }
 
-        public Task<TodoItemDTO> GetByIdAsync(long id)
+        
+        public async Task<ActionResult<TodoItemDTO>> GetByIdAsync(long id)
         {
+            TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
 
+            if (todoItem == null)
+            {
+                _logger.LogInformation("To-Do Item is empty {todoId}", todoItem.Id);
+            }
+
+
+            return MapToDto(todoItem);
         }
 
-        public async Task<TodoItemDTO> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct)
+        public async Task<ActionResult<TodoItemDTO>> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct)
         {
             TodoItem todoItem = new TodoItem
             {
@@ -50,21 +59,40 @@ namespace To_Do_API.Services
 
 
 
-        public Task DeleteAsync(long id)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            TodoItem todoItemById = await _context.ToDoItem.FindAsync(id);
+
+            _context.Remove(todoItemById);
+
+            await _context.SaveChangesAsync();
+
         }
 
-        
-
-        
-
-        public Task<TodoItemDTO> UpdateAsync(long id, TodoItemDTO todoItemDto)
+        public async Task<ActionResult<TodoItemDTO>> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (todoItem == null)
+            {
+                _logger.LogInformation("Empty To-Do {TodoId}", todoItem.Id);
+            }
+
+
+            TodoItem updateTodo = new TodoItem
+            {
+                Name = updateTodoItemRequest.Name,
+                IsComplete = updateTodoItemRequest.IsComplete
+            };
+
+            _context.ToDoItem.Update(updateTodo);
+            await _context.SaveChangesAsync(ct);
+            _logger.LogInformation("To-Do Item Updated. {TodoId}", updateTodo.Id);
+
+
+            return MapToDto(updateTodo);
+
         }
-
-
 
 
         private TodoItemDTO MapToDto(TodoItem todoItem)
