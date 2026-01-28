@@ -16,13 +16,13 @@ namespace To_Do_API.Services
             _context = context;
         }
 
-        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetAllAsync()
+        public async Task<IEnumerable<TodoItemDTO>> GetAllAsync()
         {
             return await _context.ToDoItem.Select(x => MapToDto(x)).ToListAsync(); // Yani önce dto yu getirip sonrasında listeliyoruz
         }
 
         
-        public async Task<ActionResult<TodoItemDTO>> GetByIdAsync(long id)
+        public async Task<TodoItemDTO> GetByIdAsync(long id)
         {
             TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -35,7 +35,7 @@ namespace To_Do_API.Services
             return MapToDto(todoItem);
         }
 
-        public async Task<ActionResult<TodoItemDTO>> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct)
+        public async Task<TodoItemDTO> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct)
         {
             TodoItem todoItem = new TodoItem
             {
@@ -69,7 +69,7 @@ namespace To_Do_API.Services
 
         }
 
-        public async Task<ActionResult<TodoItemDTO>> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, CancellationToken ct)
+        public async Task<TodoItemDTO> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, CancellationToken ct)
         {
             TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -79,18 +79,16 @@ namespace To_Do_API.Services
             }
 
 
-            TodoItem updateTodo = new TodoItem
-            {
-                Name = updateTodoItemRequest.Name,
-                IsComplete = updateTodoItemRequest.IsComplete
-            };
+            todoItem.Name = updateTodoItemRequest.Name;
+            todoItem.IsComplete = updateTodoItemRequest.IsComplete;
 
-            _context.ToDoItem.Update(updateTodo);
+
+            _context.ToDoItem.Update(todoItem);
             await _context.SaveChangesAsync(ct);
-            _logger.LogInformation("To-Do Item Updated. {TodoId}", updateTodo.Id);
+            _logger.LogInformation("To-Do Item Updated. {TodoId}", todoItem.Id);
 
 
-            return MapToDto(updateTodo);
+            return MapToDto(todoItem);
 
         }
 
