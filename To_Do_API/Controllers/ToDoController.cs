@@ -56,11 +56,11 @@ namespace To_Do_API.Controllers
 
 
         // Delete 
-        [HttpDelete]
-        [Route(("Delete/{id}"))]
-        public async Task Delete(long id)
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
             await _todoService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

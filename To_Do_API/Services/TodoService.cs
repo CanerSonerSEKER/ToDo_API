@@ -20,6 +20,7 @@ namespace To_Do_API.Services
 
         public async Task<IEnumerable<TodoItemDTO>> GetAllAsync()
         {
+            _logger.LogInformation("Tüm to-do mesajları getiriliyor.");
             return await _context.ToDoItem.Select(x => MapToDto(x)).ToListAsync(); // Yani önce dto yu getirip sonrasında listeliyoruz
         }
 
@@ -27,17 +28,22 @@ namespace To_Do_API.Services
         public async Task<TodoItemDTO> GetByIdAsync(long id)
         {
             TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
+            _logger.LogInformation($"{id}' ye sahip todo getiriliyor.");
 
             if (todoItem == null)
             {
                 throw new NotFoundException($"Girilen Id ile eşleşen bir todo yok. To-Do Id : {id}");
             }
 
+
+            _logger.LogInformation($"{id}' ye sahip todo başarıyla getirildi.");
             return MapToDto(todoItem);
         }
 
         public async Task<TodoItemDTO> CreateAsync(CreateTodoItemRequest todoRequest, CancellationToken ct)
         {
+            _logger.LogInformation($"To-do oluşturuluyor.");
+
             TodoItem todoItem = new TodoItem
             {
                 Name = todoRequest.Name,
@@ -46,7 +52,7 @@ namespace To_Do_API.Services
 
             await _context.ToDoItem.AddAsync(todoItem, ct);
             await _context.SaveChangesAsync(ct);
-            _logger.LogInformation("To-Do created. {TodoId}", todoItem.Id);
+            _logger.LogInformation("To-Do oluşturuldu. {TodoId}", todoItem.Id);
 
             //return new TodoItemDTO
             //{
@@ -61,15 +67,18 @@ namespace To_Do_API.Services
 
         public async Task DeleteAsync(long id)
         {
+            _logger.LogInformation($"Silme işlemi başlatıldı.");
             TodoItem todoItemById = await _context.ToDoItem.FindAsync(id);
 
             _context.Remove(todoItemById);
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Silme işlemi başarıyla tamamlandı.");
         }
 
         public async Task<TodoItemDTO> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, CancellationToken ct)
         {
+            _logger.LogInformation($"Belirtilen to-do yeniden düzenleniyor. To-do Id : {id}");
             TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
 
             if (todoItem == null)
