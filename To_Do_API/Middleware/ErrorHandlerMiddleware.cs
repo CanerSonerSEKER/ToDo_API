@@ -5,7 +5,7 @@ using To_Do_API.Exceptions;
 
 namespace To_Do_API.Middleware
 {
-    public class ErrorHandlerMiddleware : IMiddleware
+    public class ErrorHandlerMiddleware
     {
 
         private readonly RequestDelegate _next;
@@ -17,12 +17,11 @@ namespace To_Do_API.Middleware
             _logger = logger;
         }
 
-        //BURADA KALDIM 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await next(context); // Context mevcut istegi belirtiyor.
+                await _next(context); // Context mevcut istegi belirtiyor.
             }
             catch (Exception error)
             {
@@ -34,21 +33,21 @@ namespace To_Do_API.Middleware
 
                     case BadRequestException:
                         // Custom application error
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        response.StatusCode = (int)HttpStatusCode.BadRequest; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
 
 
                     case NotFoundException:
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                        response.StatusCode = (int)HttpStatusCode.NotFound; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
 
                     default:
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
                 }
                 _logger.LogInformation(error.Message);
                 context.Response.StatusCode = response.StatusCode;
-                var resultMessage = JsonSerializer.Serialize(new { message = error?.Message });
+                string resultMessage = JsonSerializer.Serialize(new { message = error?.Message });
                 await context.Response.WriteAsync(resultMessage);
             }
         }

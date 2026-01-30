@@ -33,16 +33,11 @@ namespace To_Do_API.Controllers
         {
             TodoItemDTO todo = await _todoService.GetByIdAsync(id);
 
-            if (todo == null)
-            {
-                return NotFound();
-            }
-
             return Ok(todo);
         }
 
         // ADD / POST 
-        [HttpPost()]
+        [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> Create([FromBody] CreateTodoItemRequest createTodoRequest, CancellationToken ct)
         {
             TodoItemDTO result = await _todoService.CreateAsync(createTodoRequest, ct);
@@ -54,7 +49,9 @@ namespace To_Do_API.Controllers
         [HttpPut]
         public async Task<ActionResult<TodoItemDTO>> Update(long id, UpdateTodoItemRequest updateTodoRequest, CancellationToken ct)
         {
-            return await _todoService.UpdateAsync(id, updateTodoRequest, ct);
+            TodoItemDTO result = await _todoService.UpdateAsync(id, updateTodoRequest, ct);
+
+            return Ok(result);
         }
 
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using To_Do_API.Exceptions;
 using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO;
 
@@ -28,9 +30,8 @@ namespace To_Do_API.Services
 
             if (todoItem == null)
             {
-                _logger.LogInformation("To-Do Item is empty {todoId}", todoItem.Id);
+                throw new NotFoundException($"Girilen Id ile eşleşen bir todo yok. To-Do Id : {id}");
             }
-
 
             return MapToDto(todoItem);
         }
@@ -58,7 +59,6 @@ namespace To_Do_API.Services
         }
 
 
-
         public async Task DeleteAsync(long id)
         {
             TodoItem todoItemById = await _context.ToDoItem.FindAsync(id);
@@ -66,7 +66,6 @@ namespace To_Do_API.Services
             _context.Remove(todoItemById);
 
             await _context.SaveChangesAsync();
-
         }
 
         public async Task<TodoItemDTO> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, CancellationToken ct)
@@ -75,7 +74,8 @@ namespace To_Do_API.Services
 
             if (todoItem == null)
             {
-                _logger.LogInformation("Empty To-Do {TodoId}", todoItem.Id);
+                _logger.LogInformation("To-Do Item is empty. {todoId}", id);
+                throw new NotFoundException(message: $"Girilen Id ile eşleşen bir todo yok. To-Do Id : {id}");
             }
 
 

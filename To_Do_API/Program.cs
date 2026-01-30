@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using To_Do_API.Middleware;
 using To_Do_API.Models;
 using To_Do_API.Services;
 
@@ -29,10 +30,12 @@ namespace To_Do_API
                 app.UseSwaggerUI();
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.MapControllers();
 
