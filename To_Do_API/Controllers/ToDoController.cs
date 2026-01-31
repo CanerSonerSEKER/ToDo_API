@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.Xml;
-using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO;
 using To_Do_API.Services;
 
