@@ -16,6 +16,25 @@ namespace To_Do_API.Models
         public DbSet<User> Users { get; set; } = null!;
 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // User - ToDoItem İlişkisi için
+            modelBuilder.Entity<TodoItem>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.TodoItems)
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Unique Constraint 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+        }
+
 
 
     }
