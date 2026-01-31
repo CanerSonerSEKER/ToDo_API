@@ -27,7 +27,7 @@ namespace To_Do_API.Services
         
         public async Task<TodoItemDTO> GetByIdAsync(long id)
         {
-            TodoItem todoItem = await _context.ToDoItem.FirstOrDefaultAsync(x => x.Id == id);
+            TodoItem todoItem = await _context.ToDoItem.FindAsync(id);
             _logger.LogInformation($"{id}' ye sahip todo getiriliyor.");
 
             if (todoItem == null)
@@ -54,13 +54,6 @@ namespace To_Do_API.Services
             await _context.SaveChangesAsync(ct);
             _logger.LogInformation("To-Do oluşturuldu. {TodoId}", todoItem.Id);
 
-            //return new TodoItemDTO
-            //{
-            //    Id = todoItem.Id,
-            //    Name = todoItem.Name,
-            //    IsComplete = todoItem.IsComplete
-            //};
-
             return MapToDto(todoItem);
         }
 
@@ -69,6 +62,12 @@ namespace To_Do_API.Services
         {
             _logger.LogInformation($"Silme işlemi başlatıldı.");
             TodoItem todoItemById = await _context.ToDoItem.FindAsync(id);
+
+            if (todoItemById == null)
+            {
+                _logger.LogInformation("Verilen id de bir todo yok. {todoId}", id);
+                throw new NotFoundException("Verilen id de bir todo yok. Silme işlemi başarısız.");
+            }
 
             _context.Remove(todoItemById);
 

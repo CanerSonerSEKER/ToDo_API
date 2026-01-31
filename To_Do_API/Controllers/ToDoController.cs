@@ -46,7 +46,7 @@ namespace To_Do_API.Controllers
 
 
         // UPDATE / PUT
-        [HttpPut]
+        [HttpPut("{id:long}")]
         public async Task<ActionResult<TodoItemDTO>> Update(long id, UpdateTodoItemRequest updateTodoRequest, CancellationToken ct)
         {
             TodoItemDTO result = await _todoService.UpdateAsync(id, updateTodoRequest, ct);

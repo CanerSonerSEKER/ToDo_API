@@ -30,12 +30,12 @@ namespace To_Do_API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.MapControllers();
 
