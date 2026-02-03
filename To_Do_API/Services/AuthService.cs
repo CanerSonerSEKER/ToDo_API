@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using To_Do_API.Exceptions;
 using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO.User.Auth;
@@ -26,7 +25,7 @@ namespace To_Do_API.Services
 
             if (existingUser != null)
             {
-                _logger.LogWarning("Kullanıcı adı veya email zaten mevcut. Username : {Username}", registerRequest.Username);
+                _logger.LogWarning("Kullanıcı adı veya email zaten mevcut. ", );
                 throw new BadRequestException("Username veya Email zaten kullanılıyor.");
             }
 
@@ -45,7 +44,7 @@ namespace To_Do_API.Services
             await _context.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Kullanıcı başarıyla oluşturuldu. UserId : {}", newUser.Id);
+            _logger.LogInformation("Kullanıcı başarıyla oluşturuldu. UserId : {userId}", newUser.Id);
 
             // JWT token üret (daha sonra eklenecek)
 
@@ -65,12 +64,12 @@ namespace To_Do_API.Services
         {
             _logger.LogInformation("Login denemesi yapılıyor. Username : {Username}", loginRequest.Username);
 
-            User loginUser = await _context.Users.FindAsync(loginRequest.Username);
+            User loginUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginRequest.Username);
 
             if (loginUser == null)
             {
-                _logger.LogWarning("Böyle bir kullanıcı bulunmamaktadır. Username : {username}", loginRequest.Username);
-                throw new UnauthorizeException($"Kullanıcı bulunmamaktadır. Username {loginRequest.Username}");
+                _logger.LogWarning("Kullanıcı adı veya şifre hatalı ");
+                throw new UnauthorizeException("Kullanıcı adı veya şifre hatalı");
             }
 
             // Şifre kontrolü
@@ -78,8 +77,8 @@ namespace To_Do_API.Services
 
             if (!isPasswordValid)
             {
-                _logger.LogWarning("Girdiğiniz şifre hatalıdır.Lütfen tekrar deneyiniz. Username : {username}", loginRequest.Username);
-                throw new UnauthorizeException($"Girdiğiniz şifre hatalıdır. {loginRequest.Username}");
+                _logger.LogWarning("Kullanıcı adı veya şifre hatalı ");
+                throw new UnauthorizeException("Kullanıcı adı veya şifre hatalı ");
             }
 
             _logger.LogInformation("Tebrikler başarıyla giriş yaptınız. UserId : {userId}", loginUser.Id);
@@ -97,7 +96,6 @@ namespace To_Do_API.Services
             };
 
         }
-
         
     }
 }

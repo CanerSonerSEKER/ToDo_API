@@ -20,6 +20,7 @@ namespace To_Do_API
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ToDoContext>(opt => opt.UseInMemoryDatabase("ToDoList"));
             builder.Services.AddScoped<ITodoService, TodoService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var app = builder.Build();
 
