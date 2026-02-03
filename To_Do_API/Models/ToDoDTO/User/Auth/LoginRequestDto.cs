@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace To_Do_API.Models.ToDoDTO.UserDTO
+namespace To_Do_API.Models.ToDoDTO.User.Auth
 {
-    public class UserLoginRequestDto
+    public class LoginRequestDto
     {
 
         [Required]

@@ -41,6 +41,10 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.NotFound; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
 
+                    case UnauthorizeException:
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
