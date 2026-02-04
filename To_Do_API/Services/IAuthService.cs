@@ -1,4 +1,5 @@
-﻿using To_Do_API.Models.ToDoDTO.User.Auth;
+﻿using To_Do_API.Models;
+using To_Do_API.Models.ToDoDTO.User.Auth;
 
 namespace To_Do_API.Services
 {

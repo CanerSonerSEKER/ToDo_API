@@ -25,7 +25,7 @@ namespace To_Do_API.Services
 
             if (existingUser != null)
             {
-                _logger.LogWarning("Kullanıcı adı veya email zaten mevcut. ", );
+                _logger.LogWarning("Kullanıcı adı veya email zaten mevcut. " );
                 throw new BadRequestException("Username veya Email zaten kullanılıyor.");
             }
 
@@ -96,6 +96,7 @@ namespace To_Do_API.Services
             };
 
         }
+
         
     }
 }
