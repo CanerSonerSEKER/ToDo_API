@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
 using To_Do_API.Exceptions;
+using To_Do_API.Helpers;
 using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO.User.Auth;
 
@@ -9,11 +11,13 @@ namespace To_Do_API.Services
     {
         private readonly ILogger<AuthService> _logger;
         private readonly ToDoContext _context;
+        private readonly JwtHelper _jwtHelper;
 
-        public AuthService(ILogger<AuthService> logger, ToDoContext context)
+        public AuthService(ILogger<AuthService> logger, ToDoContext context, JwtHelper jwtHelper)
         {
             _logger = logger;
             _context = context;
+            _jwtHelper = jwtHelper;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto registerRequest)
@@ -48,7 +52,7 @@ namespace To_Do_API.Services
 
             // JWT token üret (daha sonra eklenecek)
 
-            string token = "temproray-token"; // Şimdilik placeholder 
+            string token = _jwtHelper.GenerateToken(newUser); 
 
             return new AuthResponseDto
             {
@@ -84,7 +88,7 @@ namespace To_Do_API.Services
             _logger.LogInformation("Tebrikler başarıyla giriş yaptınız. UserId : {userId}", loginUser.Id);
 
             // JWT Token Uret
-            string token = "temproray-token";
+            string token = _jwtHelper.GenerateToken(loginUser);
 
 
             return new AuthResponseDto
