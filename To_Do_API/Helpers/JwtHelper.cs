@@ -18,8 +18,17 @@ namespace To_Do_API.Helpers
 
         public string GenerateToken(User user)
         {
-            IConfiguration jwtSettings = _configuration.GetSection("Jwt");
-            byte[] key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
+            string keyString = _configuration["Jwt:Key"];
+            string issuer = _configuration["Jwt:Issuer"];
+            string audience = _configuration["Jwt:Audience"];
+            string expires = _configuration["Jwt:ExpiresInMinutes"];
+
+            Console.WriteLine($"Key: {keyString}");
+            Console.WriteLine($"Issuer: {issuer}");
+            Console.WriteLine($"Audience: {audience}");
+
+            byte[] key = Encoding.UTF8.GetBytes(keyString);
 
             Claim[] claims = new[]
             {
@@ -36,10 +45,10 @@ namespace To_Do_API.Helpers
                 );
 
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["ToDoAPI"],
-                audience: jwtSettings["ToDoAPIUsers"],
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpiresMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(expires)),
                 signingCredentials: credentials
                 );
 

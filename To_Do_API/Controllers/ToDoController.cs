@@ -1,32 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using To_Do_API.Models.ToDoDTO;
 using To_Do_API.Services;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace To_Do_API.Controllers
 {
     [ApiController]
     [Route("api/todos")]
+    [Authorize]
     public class ToDoController : ControllerBase
     {
         private readonly ITodoService _todoService;
+
+
 
         public ToDoController(ITodoService todoService)
         {
             _todoService = todoService;
         }
 
+        private long GetUserId()
+        {
+            string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return long.Parse(userIdClaim);
+        }
+
+
         // GET All 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodos()
         {
-            return Ok(await _todoService.GetAllAsync());
+            long userId = GetUserId();
+            return Ok(await _todoService.GetAllAsync(userId));
         }
 
         // GET BY ID
         [HttpGet("{id:long}")]
         public async Task<ActionResult<TodoItemDTO>> GetTodosById(long id)
         {
-            TodoItemDTO todo = await _todoService.GetByIdAsync(id);
+            long userId = GetUserId();
+            TodoItemDTO todo = await _todoService.GetByIdAsync(id, userId);
 
             return Ok(todo);
         }
@@ -35,7 +50,8 @@ namespace To_Do_API.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> Create([FromBody] CreateTodoItemRequest createTodoRequest, CancellationToken ct)
         {
-            TodoItemDTO result = await _todoService.CreateAsync(createTodoRequest, ct);
+            long userId = GetUserId();
+            TodoItemDTO result = await _todoService.CreateAsync(createTodoRequest, userId, ct);
             return CreatedAtAction(nameof(GetTodosById), new { id = result.Id }, result);
         }
 
@@ -44,7 +60,8 @@ namespace To_Do_API.Controllers
         [HttpPut("{id:long}")]
         public async Task<ActionResult<TodoItemDTO>> Update(long id, UpdateTodoItemRequest updateTodoRequest, CancellationToken ct)
         {
-            TodoItemDTO result = await _todoService.UpdateAsync(id, updateTodoRequest, ct);
+            long userId = GetUserId();
+            TodoItemDTO result = await _todoService.UpdateAsync(id, updateTodoRequest, userId, ct);
 
             return Ok(result);
         }
@@ -54,7 +71,8 @@ namespace To_Do_API.Controllers
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _todoService.DeleteAsync(id);
+            long userId = GetUserId();
+            await _todoService.DeleteAsync(id, userId);
             return NoContent();
         }
     }
