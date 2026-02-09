@@ -24,10 +24,6 @@ namespace To_Do_API.Helpers
             string audience = _configuration["Jwt:Audience"];
             string expires = _configuration["Jwt:ExpiresInMinutes"];
 
-            Console.WriteLine($"Key: {keyString}");
-            Console.WriteLine($"Issuer: {issuer}");
-            Console.WriteLine($"Audience: {audience}");
-
             byte[] key = Encoding.UTF8.GetBytes(keyString);
 
             Claim[] claims = new[]

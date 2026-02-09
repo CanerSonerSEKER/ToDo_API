@@ -14,8 +14,6 @@ namespace To_Do_API.Controllers
     {
         private readonly ITodoService _todoService;
 
-
-
         public ToDoController(ITodoService todoService)
         {
             _todoService = todoService;
