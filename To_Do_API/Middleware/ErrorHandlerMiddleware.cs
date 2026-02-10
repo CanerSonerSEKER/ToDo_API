@@ -49,8 +49,8 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         break;
                 }
-                _logger.LogInformation(error.Message);
-                context.Response.StatusCode = response.StatusCode;
+                _logger.LogWarning("Hata oluştu. {Message}", error.Message);
+                //context.Response.StatusCode = response.StatusCode;
                 string resultMessage = JsonSerializer.Serialize(new { message = error?.Message });
                 await context.Response.WriteAsync(resultMessage);
             }

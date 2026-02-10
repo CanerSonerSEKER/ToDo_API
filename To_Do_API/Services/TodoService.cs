@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using To_Do_API.Exceptions;
 using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO;
@@ -72,7 +70,7 @@ namespace To_Do_API.Services
 
             if (todoItem == null)
             {
-                _logger.LogInformation("To-Do Item is empty. {todoId}, UserId: {userId}", id, userId);
+                _logger.LogWarning("To-Do Item is empty. {todoId}, UserId: {userId}", id, userId);
                 throw new NotFoundException(message: $"Girilen Id ile eşleşen bir todo yok. To-Do Id : {id}");
             }
 
@@ -99,7 +97,7 @@ namespace To_Do_API.Services
 
             if (todoItemById == null)
             {
-                _logger.LogInformation("Verilen id de bir todo yok. {todoId}, UserId : {userId}", id, userId);
+                _logger.LogWarning("Verilen id de bir todo yok. {todoId}, UserId : {userId}", id, userId);
                 throw new NotFoundException("Verilen id de bir todo yok. Silme işlemi başarısız.");
             }
 

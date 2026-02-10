@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using To_Do_API.Models;
-using To_Do_API.Models.ToDoDTO;
+﻿using To_Do_API.Models.ToDoDTO;
 
 namespace To_Do_API.Services
 {

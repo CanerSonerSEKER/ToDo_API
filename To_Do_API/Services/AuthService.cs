@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Data;
 using To_Do_API.Exceptions;
 using To_Do_API.Helpers;
 using To_Do_API.Models;

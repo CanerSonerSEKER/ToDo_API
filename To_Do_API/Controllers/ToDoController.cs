@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using To_Do_API.Models.ToDoDTO;
 using To_Do_API.Services;
-using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using To_Do_API.Exceptions;
 
 namespace To_Do_API.Controllers
 {
@@ -22,6 +22,12 @@ namespace To_Do_API.Controllers
         private long GetUserId()
         {
             string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userIdClaim == null)
+            {
+                throw new NotFoundException("İstenen Id ile user bulunamadı.");
+            }
+
             return long.Parse(userIdClaim);
         }
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
-using To_Do_API.Models;
 using To_Do_API.Models.ToDoDTO.User.Auth;
 using To_Do_API.Services;
 
@@ -24,7 +22,7 @@ namespace To_Do_API.Controllers
 
             // return CreatedAtAction(nameof(GetUserById), new {id = request.UserId }, request);
 
-            return Ok(request);
+            return StatusCode(201, request);
         }
 
 
@@ -32,7 +30,6 @@ namespace To_Do_API.Controllers
         public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginRequestDto loginRequest)
         {
             AuthResponseDto request = await _authService.LoginAsync(loginRequest);
-
 
             return Ok(request);
         }
