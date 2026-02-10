@@ -75,12 +75,13 @@ Todo endpoint’lerine erişmek için geçerli bir token zorunludur.
 - Kullanıcılar yalnızca kendi todolarına erişebilir.
 
 ## Method	Endpoint	Açıklama
-  GET	/api/todos	Kullanıcının tüm todolarını getirir
-  GET	/api/todos/{id}	Kullanıcının belirli todo’sunu getirir
-  POST	/api/todos	Yeni todo oluşturur
-  PUT	/api/todos/{id}	Todo günceller
-  DELETE	/api/todos/{id}	Todo siler
-  Yetkilendirme Mantığı
+- GET	/api/todos	Kullanıcının tüm todolarını getirir
+- GET	/api/todos/{id}	Kullanıcının belirli todo’sunu getirir
+- POST	/api/todos	Yeni todo oluşturur
+- PUT	/api/todos/{id}	Todo günceller
+- DELETE	/api/todos/{id}	Todo siler
+
+## Yetkilendirme Mantığı
 
 - JWT token içinde NameIdentifier claim olarak UserId taşınır
 - UserId, HttpContext.User üzerinden alınır
