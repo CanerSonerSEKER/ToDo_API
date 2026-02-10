@@ -25,7 +25,7 @@ namespace To_Do_API.Controllers
 
             if (userIdClaim == null)
             {
-                throw new NotFoundException("İstenen Id ile user bulunamadı.");
+                throw new UnauthorizeException("İstenen Id ile user bulunamadı.");
             }
 
             return long.Parse(userIdClaim);

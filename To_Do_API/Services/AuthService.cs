@@ -51,12 +51,12 @@ namespace To_Do_API.Services
 
             // JWT token üret (daha sonra eklenecek)
 
-            string token = _jwtHelper.GenerateToken(newUser); 
+            //string token = _jwtHelper.GenerateToken(newUser); 
 
             return new AuthResponseDto
             {
                 UserId = newUser.Id,
-                Token = token,
+                //Token = token,
                 Username = newUser.Username,
                 Email = newUser.Email
             };
