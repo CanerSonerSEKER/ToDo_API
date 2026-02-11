@@ -49,7 +49,7 @@ namespace To_Do_API
                 });
             });
 
-            builder.Services.AddDbContext<ToDoContext>(opt => opt.UseInMemoryDatabase("ToDoList")); 
+            builder.Services.AddDbContext<ToDoContext>(opt => opt.UseSqlServer("DefaultConnection")); 
             builder.Services.AddScoped<ITodoService, TodoService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddSingleton<JwtHelper>();
