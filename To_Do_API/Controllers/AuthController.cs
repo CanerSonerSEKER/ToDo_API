@@ -18,20 +18,18 @@ namespace To_Do_API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterRequestDto registerRequest)
         {
-            AuthResponseDto request = await _authService.RegisterAsync(registerRequest);
+            AuthResponseDto response = await _authService.RegisterAsync(registerRequest);
 
-            // return CreatedAtAction(nameof(GetUserById), new {id = request.UserId }, request);
-
-            return StatusCode(201, request);
+            return StatusCode(201, response);
         }
 
 
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginRequestDto loginRequest)
         {
-            AuthResponseDto request = await _authService.LoginAsync(loginRequest);
+            AuthResponseDto response = await _authService.LoginAsync(loginRequest);
 
-            return Ok(request);
+            return Ok(response);
         }
 
 

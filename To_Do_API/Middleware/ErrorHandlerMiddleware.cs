@@ -1,5 +1,4 @@
-﻿
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using To_Do_API.Exceptions;
 
@@ -34,24 +33,26 @@ namespace To_Do_API.Middleware
                     case BadRequestException:
                         // Custom application error
                         response.StatusCode = (int)HttpStatusCode.BadRequest; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
+                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
                         break;
 
 
                     case NotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
+                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
                         break;
 
                     case UnauthorizeException:
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
                         break;
 
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
+                        _logger.LogError("Hata oluştu. {Message}", error.Message);
                         break;
                 }
-                _logger.LogWarning("Hata oluştu. {Message}", error.Message);
-                //context.Response.StatusCode = response.StatusCode;
-                string resultMessage = JsonSerializer.Serialize(new { message = error?.Message });
+                string resultMessage = JsonSerializer.Serialize(new { message = error.Message });
                 await context.Response.WriteAsync(resultMessage);
             }
         }
