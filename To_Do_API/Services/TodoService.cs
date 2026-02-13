@@ -19,7 +19,7 @@ namespace To_Do_API.Services
         public async Task<IEnumerable<TodoItemDTO>> GetAllAsync(long userId)
         {
             _logger.LogInformation("Tüm to-do mesajları getiriliyor. UserId : {userId}", userId);
-            return await _context.ToDoItem
+            return await _context.ToDoItems
                 .Where(t => t.UserId == userId)
                 .Select(x => MapToDto(x))
                 .ToListAsync();  
@@ -30,7 +30,7 @@ namespace To_Do_API.Services
         {
             _logger.LogInformation("Todo getiriliyor. To-do Id : {todoId}, UserId : {userId}", id, userId);
             
-            TodoItem todoItem = await _context.ToDoItem
+            TodoItem todoItem = await _context.ToDoItems
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
 
 
@@ -55,7 +55,7 @@ namespace To_Do_API.Services
                 IsComplete = false
             };
 
-            await _context.ToDoItem.AddAsync(todoItem, ct);
+            await _context.ToDoItems.AddAsync(todoItem, ct);
             await _context.SaveChangesAsync(ct);
             _logger.LogInformation("To-Do oluşturuldu. {TodoId}", todoItem.Id);
 
@@ -65,7 +65,7 @@ namespace To_Do_API.Services
         public async Task<TodoItemDTO> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, long userId, CancellationToken ct)
         {
             _logger.LogInformation("Belirtilen to-do yeniden düzenleniyor. To-do Id : {id}, UserId : {userId}", id, userId);
-            TodoItem todoItem = await _context.ToDoItem
+            TodoItem todoItem = await _context.ToDoItems
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
 
             if (todoItem == null)
@@ -79,7 +79,7 @@ namespace To_Do_API.Services
             todoItem.IsComplete = updateTodoItemRequest.IsComplete;
 
 
-            _context.ToDoItem.Update(todoItem);
+            _context.ToDoItems.Update(todoItem);
             await _context.SaveChangesAsync(ct);
             _logger.LogInformation("To-Do Item Updated. {TodoId}", todoItem.Id);
 
@@ -92,7 +92,7 @@ namespace To_Do_API.Services
         {
             _logger.LogInformation("Silme işlemi başlatıldı. To-Do Id : {todoId}, UserId: {userId}", id, userId);
 
-            TodoItem todoItemById = await _context.ToDoItem
+            TodoItem todoItemById = await _context.ToDoItems
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
 
             if (todoItemById == null)

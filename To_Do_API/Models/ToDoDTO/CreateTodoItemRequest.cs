@@ -2,6 +2,6 @@
 {
     public class CreateTodoItemRequest
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

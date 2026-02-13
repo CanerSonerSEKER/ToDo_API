@@ -40,7 +40,6 @@ namespace To_Do_API.Services
                 Username = registerRequest.Username,
                 Email = registerRequest.Email,
                 PasswordHash = passwordHash,
-                Address = registerRequest.Address,
                 CreatedAt = DateTime.UtcNow,
             };
 
