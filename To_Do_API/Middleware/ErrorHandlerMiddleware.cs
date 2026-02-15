@@ -9,11 +9,13 @@ namespace To_Do_API.Middleware
 
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlerMiddleware> _logger;
+        private readonly IHostEnvironment _hostEnvironment;
 
-        public ErrorHandlerMiddleware(ILogger<ErrorHandlerMiddleware> logger, RequestDelegate next)
+        public ErrorHandlerMiddleware(ILogger<ErrorHandlerMiddleware> logger, RequestDelegate next, IHostEnvironment hostEnvironment)
         {
             _next = next;
             _logger = logger;
+            _hostEnvironment = hostEnvironment;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -50,6 +52,7 @@ namespace To_Do_API.Middleware
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         _logger.LogError("Hata oluştu. {Message}", error.Message);
+                        var clientMessage = _hostEnvironment.IsDevelopment() ? error.Message : "...";
                         break;
                 }
                 string resultMessage = JsonSerializer.Serialize(new { message = error.Message });
