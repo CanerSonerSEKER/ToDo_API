@@ -41,7 +41,7 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.BadRequest; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         title = "Bad Request";
                         errorCode = "BAD_REQUEST";                        
-                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
+                        _logger.LogWarning("BadRequest exception occurred: {Message}", error.Message);
                         clientMessage = _hostEnvironment.IsDevelopment() 
                             ? error.Message 
                             : "The request could not be processed. Please check your input and try again.";
@@ -52,7 +52,7 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.NotFound; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         title = "Not Found";
                         errorCode = "NOT_FOUND";
-                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
+                        _logger.LogWarning("NotFound exception occurred:  {Message}", error.Message);
                         clientMessage = _hostEnvironment.IsDevelopment() 
                             ? error.Message 
                             : "The requested resource was not found.";
@@ -62,7 +62,7 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         title = "Unauthorized";
                         errorCode = "UNAUTHORIZED";
-                        _logger.LogWarning("Hata oluştu. {Message}", error.Message);
+                        _logger.LogWarning("Unauthorized exception occurred: {Message}", error.Message);
                         clientMessage = _hostEnvironment.IsDevelopment() 
                             ? error.Message 
                             : "Authentication failed. Please log in again.";
@@ -72,7 +72,7 @@ namespace To_Do_API.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError; // Gelecek olan yanıtın StatusCode'unu belirliyoruz switch case ile
                         title = "Internal Server Error";
                         errorCode = "INTERNAL_ERROR";
-                        _logger.LogError("Hata oluştu. {Message}", error.Message);
+                        _logger.LogError("Unhandled exception occurred: {Message}", error.Message);
                         clientMessage = _hostEnvironment.IsDevelopment() 
                             ? error.Message 
                             : "An unexpected error occurred. Please contact support with the trace ID.";
