@@ -31,6 +31,12 @@ namespace To_Do_API.Controllers
             return long.Parse(userIdClaim);
         }
 
+        [HttpGet("test-error")]
+        [AllowAnonymous]
+        public IActionResult TestError()
+        {
+            throw new Exception("This is a test exception to verify error handling");
+        }
 
         // GET All 
         [HttpGet]
@@ -79,5 +85,8 @@ namespace To_Do_API.Controllers
             await _todoService.DeleteAsync(id, userId);
             return NoContent();
         }
+
+
+
     }
 }

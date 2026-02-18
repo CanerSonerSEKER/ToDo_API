@@ -30,7 +30,7 @@ namespace To_Do_API.Services
         {
             _logger.LogInformation("Todo getiriliyor. To-do Id : {todoId}, UserId : {userId}", id, userId);
             
-            TodoItem todoItem = await _context.ToDoItems
+            TodoItem? todoItem = await _context.ToDoItems
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
 
 
