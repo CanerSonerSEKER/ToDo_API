@@ -65,7 +65,7 @@ namespace To_Do_API.Services
         public async Task<TodoItemDTO> UpdateAsync(long id, UpdateTodoItemRequest updateTodoItemRequest, long userId, CancellationToken ct)
         {
             _logger.LogInformation("Belirtilen to-do yeniden düzenleniyor. To-do Id : {id}, UserId : {userId}", id, userId);
-            TodoItem todoItem = await _context.ToDoItems
+            TodoItem? todoItem = await _context.ToDoItems
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
 
             if (todoItem == null)
@@ -74,18 +74,14 @@ namespace To_Do_API.Services
                 throw new NotFoundException(message: $"Girilen Id ile eşleşen bir todo yok. To-Do Id : {id}");
             }
 
-
             todoItem.Name = updateTodoItemRequest.Name;
             todoItem.IsComplete = updateTodoItemRequest.IsComplete;
-
 
             _context.ToDoItems.Update(todoItem);
             await _context.SaveChangesAsync(ct);
             _logger.LogInformation("To-Do Item Updated. {TodoId}", todoItem.Id);
 
-
             return MapToDto(todoItem);
-
         }
 
         public async Task DeleteAsync(long id , long userId)

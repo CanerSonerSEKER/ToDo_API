@@ -10,6 +10,5 @@ namespace To_Do_API.Repository
         Task<TodoItemDTO> UpdateAsync(long id, long userId, UpdateTodoItemRequest updateRequest, CancellationToken ct);
         Task DeleteAsync(long id, long userId);
 
-
     }
 }
