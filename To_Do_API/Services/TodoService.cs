@@ -22,7 +22,7 @@ namespace To_Do_API.Services
 
             IEnumerable<TodoItem> todoItems = await _todoRepository.GetAllAsync(userId);
 
-            return MapToDto(todoItems);
+            return todoItems.Select(t => MapToDto(t));
         }
 
         
