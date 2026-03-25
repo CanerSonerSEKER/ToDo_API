@@ -8,7 +8,6 @@ namespace To_Do_API.Repository
         private readonly ToDoContext _context;
         private readonly ILogger<TodoRepository> _logger;
 
-
         public TodoRepository(ToDoContext context, ILogger<TodoRepository> logger)
         {
             _context = context;
