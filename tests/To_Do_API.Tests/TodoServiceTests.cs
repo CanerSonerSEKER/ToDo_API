@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using To_Do_API.Exceptions;
-using To_Do_API.Models;
 using To_Do_API.Repository;
-using Xunit;
+using To_Do_API.Services;
+using To_Do_API.Models;
+using To_Do_API.Exceptions;
 
-namespace To_Do_API.Services
+namespace To_Do_API.Tests
 {
     public class TodoServiceTests
     {

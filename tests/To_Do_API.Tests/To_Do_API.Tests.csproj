@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\To_Do_API\To_Do_API.csproj" />
+	<ProjectReference Include="..\..\To_Do_API\To_Do_API.csproj" />
   </ItemGroup>
 
 </Project>
